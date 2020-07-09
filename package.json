@@ -1,0 +1,24 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "employee and manager tracker",
+  "main": "tracker.js",
+  "dependencies": {
+    "mysql": "^2.16.0",
+    "inquirer": "^6.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steppinonland/employee-tracker.git"
+  },
+  "keywords": [
+    "employee",
+    "tracker"
+  ],
+  "author": "steppinonland",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/steppinonland/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/steppinonland/employee-tracker#readme"
+}
