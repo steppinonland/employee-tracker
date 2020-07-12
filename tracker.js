@@ -138,7 +138,7 @@ function addEmployee() {
 
 function updateRole() {
   // query the database for all employees and their roles
-  connection.query("SELECT * FROM employee", function (err, employees) {
+  connection.query("SELECT * FROM employees", function (err, employees) {
     if (err) throw err;
     // once you have them, prompt the user for which they'd like to edit
     inquirer
@@ -168,7 +168,7 @@ function updateRole() {
         }
       ])
       .then(function (answer) {
-        // get the information of the chosen person
+        // get the information of the chosen person and update their role
         var chosenEmployee = answer.choice;
         var newRole = answer.newRole;
         connection.query (
@@ -182,6 +182,38 @@ function updateRole() {
           function(error) {
             if (error) throw err;
             console.log("Employee's role has been updated.");
+            start();
+          }
+        )
+      });
+  });
+}
+function addRole() {
+  // query the database for the roles:
+  connection.query("SELECT * FROM roles", function (err) {
+    if (err) throw err;
+    // once you have them, prompt the user for which they'd like to edit
+    inquirer
+      .prompt([
+        {
+          name: newRole,
+          type: input,
+          message: "What is the title of the new role?"
+        }
+      ])
+      .then(function (answer) {
+        // get the information of the chosen person and update their role
+        var newRole = answer.newRole;
+        connection.query (
+          "UPDATE roles SET ? WHERE ?",
+          [
+            {
+              title: newRole,
+            }
+          ],
+          function(error) {
+            if (error) throw err;
+            console.log("New type of role has been added sucessfully.");
             start();
           }
         )
