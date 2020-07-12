@@ -50,7 +50,7 @@ function start() {
       } else if (answer.actions === "Add Role") {
         addRole();
       } else if (answer.actions === "Add Department") {
-        addDepartment();
+        addDept();
       } else if (answer.actions === "Update Employee Role") {
         updateRole();
       } else if (answer.actions === "Remove Employee") {
@@ -189,10 +189,7 @@ function updateRole() {
   });
 }
 function addRole() {
-  // query the database for the roles:
-  connection.query("SELECT * FROM roles", function (err) {
-    if (err) throw err;
-    // once you have them, prompt the user for which they'd like to edit
+  // prompt the user for what they want to add
     inquirer
       .prompt([
         {
@@ -202,10 +199,10 @@ function addRole() {
         }
       ])
       .then(function (answer) {
-        // get the information of the chosen person and update their role
+        // update the role table in SQL
         var newRole = answer.newRole;
         connection.query (
-          "UPDATE roles SET ? WHERE ?",
+          "INSERT INTO roles SET ? WHERE ?",
           [
             {
               title: newRole,
@@ -218,5 +215,32 @@ function addRole() {
           }
         )
       });
-  });
+}
+function addDept() {
+  // prompt the user for what department they're adding
+    inquirer
+      .prompt([
+        {
+          name: newDept,
+          type: input,
+          message: "What is the title of the new department?"
+        }
+      ])
+      .then(function (answer) {
+        // get the information of the chosen person and update their role
+        var newDept = answer.newDept;
+        connection.query (
+          "INSERT INTO departments SET ?",
+          [
+            {
+              name: newDept,
+            }
+          ],
+          function(error) {
+            if (error) throw err;
+            console.log("New department has been added sucessfully.");
+            start();
+          }
+        )
+      });
 }
