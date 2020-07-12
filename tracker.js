@@ -282,3 +282,41 @@ function removeEmployee() {
       });
   });
 }
+function removeEmployee() {
+  connection.query("SELECT * FROM roles", function (err, roles) {
+    if (err) throw err;
+    // once you have them, prompt the user for which they'd like to edit
+    inquirer
+      .prompt([
+        {
+          name: "choice",
+          type: "rawlist",
+          roles: function () {
+            var rolesArray = [];
+            for (var i = 0; i < roles.length; i++) {
+              rolesArray.push(roles[i].title);
+            }
+            return rolesArray;
+          },
+          message: "Which role would you like to remove?"
+        }
+      ])
+      .then(function (answer) {
+        // get the information of the chosen person and remove them
+        var chosenRole = answer.choice;
+        connection.query (
+          "DELETE roles SET ? WHERE ?",
+          [
+            {
+              id: chosenRole.title
+            }
+          ],
+          function(error) {
+            if (error) throw err;
+            console.log("Role has been removed successfully.");
+            start();
+          }
+        )
+      });
+  });
+}
