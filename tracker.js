@@ -244,3 +244,41 @@ function addDept() {
         )
       });
 }
+function removeEmployee() {
+  connection.query("SELECT * FROM employees", function (err, employees) {
+    if (err) throw err;
+    // once you have them, prompt the user for which they'd like to edit
+    inquirer
+      .prompt([
+        {
+          name: "choice",
+          type: "rawlist",
+          employees: function () {
+            var employeeArray = [];
+            for (var i = 0; i < employees.length; i++) {
+              choiceArray.push(employees[i].firstName + employees[i].lastName);
+            }
+            return employeeArray;
+          },
+          message: "Which employee would you like to remove?"
+        }
+      ])
+      .then(function (answer) {
+        // get the information of the chosen person and remove them
+        var chosenEmployee = answer.choice;
+        connection.query (
+          "DELETE employees SET ? WHERE ?",
+          [
+            {
+              id: chosenEmployee.id
+            }
+          ],
+          function(error) {
+            if (error) throw err;
+            console.log("Employee has been removed successfully.");
+            start();
+          }
+        )
+      });
+  });
+}
