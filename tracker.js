@@ -291,7 +291,7 @@ function removeEmployee() {
         {
           name: "choice",
           type: "rawlist",
-          roles: function () {
+          choices: function () {
             var rolesArray = [];
             for (var i = 0; i < roles.length; i++) {
               rolesArray.push(roles[i].title);
@@ -318,5 +318,25 @@ function removeEmployee() {
           }
         )
       });
+  });
+}
+function viewAllEmployees() {
+  connection.query("SELECT name FROM employees", function(err, res) {
+    if (err) throw err;
+
+    // Log all results of the SELECT statement
+    console.log(res);
+    start();
+  });
+}
+function viewAllbyDept() {
+  console.log("All employees by department...\n")
+  var query = "SELECT employees FROM departments"
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+
+    // log the employees by their department
+    console.log(res);
+    start();
   });
 }
