@@ -1,22 +1,19 @@
 // require the mysql and inquirer modules:
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-// Your port; if not 8080
-
-var PORT = process.env.PORT || 8080;
 // create the connection information for the sql database
 var connection = mysql.createConnection({
   host: "localhost",
 
   // Your port
-  port: PORT,
+  port: 3306,
 
   // Your username
   user: "root",
 
   // Your password
   password: "passwordpassword?",
-  database: "tracker_DB",
+  database: "tracker",
 });
 
 // connect to the mysql server and sql database
@@ -119,7 +116,7 @@ function addEmployee() {
     .then(function (answer) {
       // when finished prompting, insert the new employee into the db with that info
       connection.query(
-        "INSERT INTO tracker SET ?",
+        "INSERT INTO employees SET ?",
         {
           employee_name: answer.firstName + answer.lastName,
           role: answer.role,
