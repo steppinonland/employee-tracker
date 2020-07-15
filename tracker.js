@@ -80,48 +80,50 @@ function addEmployee() {
         message: "What is your new employee's last name?",
       },
       {
-        name: "role",
         type: "list",
         message: "What is the new employee's role?",
-        choices: ["Sales Lead", 
-        "Salesperson", 
-        "Lead Engineer", 
-        "Software Engineer", 
-        "Accountant", 
-        "Lawyer"]
+        choices: ['Sales Lead', 
+        'Salesperson', 
+        'Lead Engineer', 
+        'Software Engineer', 
+        'Accountant', 
+        'Lawyer'],
+        name: "role",
       },
       {
-        name: "dept",
         type: "list",
         message: "What is the new employee's department?",
-        choices: ["Sales", 
-        "Finance", 
-        "Engineering", 
-        "Legal", 
-        "Accounting", 
-        "HR"]
+        choices: ['Sales', 
+        'Finance', 
+        'Engineering', 
+        'Legal', 
+        'Accounting', 
+        'HR'],
+        name: "dept",
       },
       {
-        name: "mgr",
         type: "list",
         message: "Who is the new employee's manager?",
-        choices: ["Albert A.", 
-        "Betsy B.", 
-        "Charles C.", 
-        "Darryl D.", 
-        "Elizabeth E.", 
-        "Fred F."]
+        choices: ['Albert A.', 
+        'Betsy B.', 
+        'Charles C.', 
+        'Darryl D.', 
+        'Elizabeth E.', 
+        'Fred F.'],
+        name: "mgr"
       }
     ])
     .then(function (answer) {
+      console.log(answer)
       // when finished prompting, insert the new employee into the db with that info
       connection.query(
         "INSERT INTO employees SET ?",
         {
-          employee_name: answer.firstName + answer.lastName,
-          role: answer.role,
-          department: answer.dept,
-          manager: answer.mgr,
+          'first_name': answer.firstName,
+          'last_name': answer.lastName,
+          'role_name': answer.role,
+          'dept': answer.dept,
+          'mgr_name': answer.mgr
         },
         function (err) {
           if (err) throw err;
@@ -190,23 +192,23 @@ function addRole() {
     inquirer
       .prompt([
         {
-          name: newRole,
-          type: input,
+          name: "title",
+          type: "input",
           message: "What is the title of the new role?"
         }
       ])
       .then(function (answer) {
         // update the role table in SQL
-        var newRole = answer.newRole;
+        var newRole = answer.title;
         connection.query (
-          "INSERT INTO roles SET ? WHERE ?",
+          "INSERT INTO roles SET ?",
           [
             {
-              title: newRole,
+              'title': newRole,
             }
           ],
-          function(error) {
-            if (error) throw err;
+          function(err) {
+            if (err) throw err;
             console.log("New type of role has been added sucessfully.");
             start();
           }
@@ -218,8 +220,8 @@ function addDept() {
     inquirer
       .prompt([
         {
-          name: newDept,
-          type: input,
+          name: "newDept",
+          type: "input",
           message: "What is the title of the new department?"
         }
       ])
