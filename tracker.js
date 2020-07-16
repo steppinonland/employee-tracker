@@ -292,50 +292,26 @@ function removeEmployee() {
       });
   });
 }
-function removeEmployee() {
-  connection.query("SELECT * FROM employees", function (err, roles) {
-    if (err) throw err;
-    // once you have them, prompt the user for which they'd like to edit
-    inquirer
-      .prompt([
-        {
-          name: "choice",
-          type: "rawlist",
-          choices: function () {
-            var rolesArray = [];
-            for (var i = 0; i < roles.length; i++) {
-              rolesArray.push(roles[i].title);
-            }
-            return rolesArray;
-          },
-          message: "Which role would you like to remove?"
-        }
-      ])
-      .then(function (answer) {
-        // get the information of the chosen person and remove them
-        var chosenRole = answer.choice;
-        connection.query (
-          "DELETE roles SET ? WHERE ?",
-          [
-            {
-              id: chosenRole.title
-            }
-          ],
-          function(error) {
-            if (error) throw err;
-            console.log("Role has been removed successfully.");
-            start();
-          }
-        )
-      });
-  });
-}
+
 function viewAllEmployees() {
   connection.query("SELECT * FROM employees", function(err, res) {
     if (err) throw err;
-
+    var viewAllID = [];
+    var viewAllFN = [];
+    var viewAllLN = [];
+    var viewAllMN = [];
+    var viewAllDept = [];
+    var viewAllRole = [];
+      for (var i = 0; i < res.length; i++) {
+        viewAllID.push(res[i].id);
+        viewAllFN.push(res[i].first_name);
+        viewAllLN.push(res[i].last_name);
+        viewAllMN.push(res[i].mgr_name);
+        viewAllDept.push(res[i].dept);
+        viewAllRole.push(res[i].role_title);
+      }
     // Log all results of the SELECT statement
-    console.log(res);
+    console.table([viewAllID, viewAllFN ,viewAllLN, viewAllMN, viewAllDept, viewAllRole]);
     start();
   });
 }
