@@ -89,6 +89,12 @@ function addEmployee() {
       },
       {
         type: "list",
+        message: "Sales Lead = 1\nSalesperson = 2\nLead Engineer = 3\nSoftware Engineer = 4\nAccountant = 5\nLawyer = 6.\nWhat is the role ID?",
+        choices: [1, 2, 3, 4, 5, 6],
+        name: "rolesID",
+      },
+      {
+        type: "list",
         message: "What is the new employee's department?",
         choices: ['Sales', 
         'Finance', 
@@ -118,9 +124,10 @@ function addEmployee() {
         {
           'first_name': answer.firstName,
           'last_name': answer.lastName,
-          'role_name': answer.role,
+          'roles_title': answer.role,
           'dept': answer.dept,
-          'mgr_name': answer.mgr
+          'mgr_name': answer.mgr,
+          'roles_id': answer.rolesID
         },
         function (err) {
           if (err) throw err;
@@ -255,32 +262,34 @@ function addDept() {
       });
 }
 function removeEmployee() {
-  connection.query("SELECT * FROM employees", function (err, employees) {
+  connection.query("SELECT * FROM employees", function (err, res) {
     if (err) throw err;
     // once you have them, prompt the user for which they'd like to edit
+    var viewAllID = [];
+    var viewAllFN = [];
+    var viewAllLN = [];
+    for (var i = 0; i < res.length; i++) {
+      viewAllID.push(res[i].id);
+      viewAllFN.push(res[i].first_name);
+      viewAllLN.push(res[i].last_name);
+    }
+    console.table([viewAllID, viewAllFN ,viewAllLN]);
     inquirer
       .prompt([
         {
           name: "choice",
-          type: "rawlist",
-          employees: function () {
-            var employeeArray = [];
-            for (var i = 0; i < employees.length; i++) {
-              choiceArray.push(employees[i].firstName + employees[i].lastName);
-            }
-            return employeeArray;
-          },
-          message: "Which employee would you like to remove?"
+          type: "input",
+          message: "Which employee ID would you like to remove? Please enter their Employee ID number."
         }
       ])
       .then(function (answer) {
         // get the information of the chosen person and remove them
-        var chosenEmployee = answer.choice;
+        var chosenEmployee = parseInt(answer.choice);
         connection.query (
           "DELETE employees SET ? WHERE ?",
           [
             {
-              id: chosenEmployee.id
+              id: chosenEmployee
             }
           ],
           function(error) {
@@ -302,6 +311,7 @@ function viewAllEmployees() {
     var viewAllMN = [];
     var viewAllDept = [];
     var viewAllRole = [];
+    var viewAllRID = [];
       for (var i = 0; i < res.length; i++) {
         viewAllID.push(res[i].id);
         viewAllFN.push(res[i].first_name);
@@ -309,9 +319,10 @@ function viewAllEmployees() {
         viewAllMN.push(res[i].mgr_name);
         viewAllDept.push(res[i].dept);
         viewAllRole.push(res[i].role_title);
+        viewAllRole.push(res[i].roles_id);
       }
     // Log all results of the SELECT statement
-    console.table([viewAllID, viewAllFN ,viewAllLN, viewAllMN, viewAllDept, viewAllRole]);
+    console.table([viewAllID, viewAllFN ,viewAllLN, viewAllMN, viewAllDept, viewAllRole, viewAllRID]);
     start();
   });
 }
