@@ -37,7 +37,6 @@ function start() {
       "Remove Employee", 
       "Remove Role", 
       "View All Employees", 
-      "View All Employees by Department", 
       "Exit"],
     })
     .then(function (answer) {
@@ -56,8 +55,6 @@ function start() {
         removeRole();
       } else if (answer.actions === "View All Employees") {
         viewAllEmployees();
-      } else if (answer.actions === "View All Employees by Department") {
-        viewAllbyDept();
       } else {
         connection.end();
       }
@@ -195,16 +192,30 @@ function addRole() {
           name: "title",
           type: "input",
           message: "What is the title of the new role?"
+        },
+        {
+          type: "list",
+          message: "Sales = 1; Finance = 2; Engineering = 3; Accounting = 4; Legal = 5; HR = 6. What department ID should this role have?",
+          choices: [1, 
+          2, 
+          3, 
+          4, 
+          5, 
+          6],
+          name: "dept",
         }
       ])
       .then(function (answer) {
         // update the role table in SQL
-        var newRole = answer.title;
+        var newRole = answer.title
+        var roleDept = answer.dept;
+        console.log(newRole);
         connection.query (
           "INSERT INTO roles SET ?",
           [
             {
               'title': newRole,
+              'dept_id': roleDept
             }
           ],
           function(err) {
@@ -282,7 +293,7 @@ function removeEmployee() {
   });
 }
 function removeEmployee() {
-  connection.query("SELECT * FROM roles", function (err, roles) {
+  connection.query("SELECT * FROM employees", function (err, roles) {
     if (err) throw err;
     // once you have them, prompt the user for which they'd like to edit
     inquirer
@@ -320,21 +331,10 @@ function removeEmployee() {
   });
 }
 function viewAllEmployees() {
-  connection.query("SELECT name FROM employees", function(err, res) {
+  connection.query("SELECT * FROM employees", function(err, res) {
     if (err) throw err;
 
     // Log all results of the SELECT statement
-    console.log(res);
-    start();
-  });
-}
-function viewAllbyDept() {
-  console.log("All employees by department...\n")
-  var query = "SELECT employees FROM departments"
-  connection.query(query, function (err, res) {
-    if (err) throw err;
-
-    // log the employees by their department
     console.log(res);
     start();
   });
