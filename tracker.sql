@@ -25,7 +25,7 @@ CREATE TABLE employees (
     last_name VARCHAR(30) NOT NULL,
     mgr_name VARCHAR(30) NOT NULL,
     dept VARCHAR(30) NOT NULL,
-    role_title VARCHAR(30) NOT NULL REFERENCES roles(title),
-    role_id INT,
-    FOREIGN KEY (role_id) REFERENCES roles(roles_id)
+    roles_title VARCHAR(30) NOT NULL REFERENCES roles(title),
+    roles_id INT NOT NULL,
+    FOREIGN KEY (roles_id) REFERENCES roles(roles_id)
 );
